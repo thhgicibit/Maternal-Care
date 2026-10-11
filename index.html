@@ -48,7 +48,7 @@ try{STATE=JSON.parse(localStorage.getItem('mc-state')||'{}')||{}}catch(e){}
 function persist(){try{localStorage.setItem('mc-state',JSON.stringify(STATE))}catch(e){}}
 function fit(){var w=innerWidth||document.documentElement.clientWidth,h=innerHeight||document.documentElement.clientHeight;if(!w||!h)return;
 var fm=w/h>0.7,m=fm?48:0;document.body.classList.toggle('framed',fm);
-var k=fm?Math.min((w-m)/402,(h-m)/874):Math.min(w/402,h/874);
+var k=fm?Math.min((w-m)/402,(h-m)/874):w/402,H=fm?874:h/k;stage.style.height=H+'px';fr.style.height=H+'px';
 if(k>0)stage.style.transform='translate(-50%,-50%) scale('+k+')'}
 fit();addEventListener('resize',fit);
 function fail(m){stage.insertAdjacentHTML('beforeend','<pre style="position:absolute;inset:0;margin:0;padding:16px;white-space:pre-wrap;font:12px monospace;color:#B32442;background:#FFFAF3;z-index:9">'+m+'</pre>')}
