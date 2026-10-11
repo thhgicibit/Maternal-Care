@@ -57,9 +57,16 @@ try{STATE=JSON.parse(localStorage.getItem('mc-state')||'{}')||{}}catch(e){}
 function persist(){try{localStorage.setItem('mc-state',JSON.stringify(STATE))}catch(e){}}
 var probe=document.createElement('div');probe.style.cssText='position:fixed;left:0;top:0;right:0;bottom:0;visibility:hidden;pointer-events:none';document.body.appendChild(probe);
 function fit(){var pr=probe.getBoundingClientRect(),w=Math.round(pr.width)||innerWidth||document.documentElement.clientWidth,h=Math.round(pr.height)||innerHeight||document.documentElement.clientHeight;if(!w||!h)return;
+var sa=(function(){var d=document.getElementById('mcsa');return d?parseFloat(getComputedStyle(d).paddingTop)||0:0})();
+var sa2=(function(){var t=document.createElement('div');t.style.cssText='position:fixed;visibility:hidden;padding-top:env(safe-area-inset-top,0px)';document.body.appendChild(t);var v=parseFloat(getComputedStyle(t).paddingTop)||0;t.remove();return v})();
+var sh=Math.max(screen.height,screen.width)||0,stand=navigator.standalone===true||matchMedia('(display-mode: standalone)').matches;
+var tall=stand&&w/h<=0.7&&sh>h&&(sh-h)<=Math.max(sa2,64)+2;
+window.__tall=tall;
+if(tall){h=sh;var de=document.documentElement,bd=document.body;de.style.cssText+=';height:'+h+'px;overflow:visible';bd.style.cssText+=';height:'+h+'px;overflow:visible;bottom:auto'}
+
 var fm=w/h>0.7,m=fm?48:0;document.body.classList.toggle('framed',fm);
 var k=fm?Math.min((w-m)/402,(h-m)/874):w/402,H=fm?874:h/k;stage.style.height=H+'px';fr.style.height=H+'px';
-if(k>0)stage.style.transform='translate(-50%,-50%) scale('+k+')'}
+if(k>0){if(tall){stage.style.top='0px';stage.style.transformOrigin='50% 0';stage.style.transform='translate(-50%,0) scale('+k+')'}else{stage.style.top='50%';stage.style.transformOrigin='center';stage.style.transform='translate(-50%,-50%) scale('+k+')'}}}
 fit();addEventListener('resize',fit);addEventListener('orientationchange',function(){setTimeout(fit,120)});addEventListener('pageshow',fit);if(window.visualViewport)visualViewport.addEventListener('resize',fit);
 function fail(m){stage.insertAdjacentHTML('beforeend','<pre style="position:absolute;inset:0;margin:0;padding:16px;white-space:pre-wrap;font:12px monospace;color:#B32442;background:#FFFAF3;z-index:9">'+m+'</pre>')}
 function show(n){
@@ -95,7 +102,7 @@ go('splash');
 function f(n){return Math.round(n*10)/10}
 function u(){var cs=getComputedStyle(sa),pr=document.querySelector('body > div:not(#mcdbg):not(#mcsa)'),st=document.getElementById('stage').getBoundingClientRect(),ifr=document.getElementById('v').getBoundingClientRect(),vv=window.visualViewport,inner='?';
 try{inner=document.getElementById('v').contentWindow.innerHeight}catch(e){}
-var t=['standalone: '+(navigator.standalone===true||matchMedia('(display-mode: standalone)').matches),
+var t=['tall-mode: '+(window.__tall===true),'standalone: '+(navigator.standalone===true||matchMedia('(display-mode: standalone)').matches),
 'screen: '+screen.width+' x '+screen.height,
 'inner: '+innerWidth+' x '+innerHeight,
 'visualVP: '+(vv?f(vv.width)+' x '+f(vv.height)+' top '+f(vv.offsetTop):'n/a'),
