@@ -57,7 +57,6 @@ try{STATE=JSON.parse(localStorage.getItem('mc-state')||'{}')||{}}catch(e){}
 function persist(){try{localStorage.setItem('mc-state',JSON.stringify(STATE))}catch(e){}}
 var probe=document.createElement('div');probe.style.cssText='position:fixed;left:0;top:0;right:0;bottom:0;visibility:hidden;pointer-events:none';document.body.appendChild(probe);
 function fit(){var pr=probe.getBoundingClientRect(),w=Math.round(pr.width)||innerWidth||document.documentElement.clientWidth,h=Math.round(pr.height)||innerHeight||document.documentElement.clientHeight;if(!w||!h)return;
-var sa=(function(){var d=document.getElementById('mcsa');return d?parseFloat(getComputedStyle(d).paddingTop)||0:0})();
 var sa2=(function(){var t=document.createElement('div');t.style.cssText='position:fixed;visibility:hidden;padding-top:env(safe-area-inset-top,0px)';document.body.appendChild(t);var v=parseFloat(getComputedStyle(t).paddingTop)||0;t.remove();return v})();
 var sh=Math.max(screen.height,screen.width)||0,stand=navigator.standalone===true||matchMedia('(display-mode: standalone)').matches;
 var tall=stand&&w/h<=0.7&&sh>h&&(sh-h)<=Math.max(sa2,64)+2;
@@ -96,21 +95,5 @@ go('splash');
 })();
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:'){addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
-<div id="mcdbg" style="position:fixed;left:50%;top:64px;transform:translateX(-50%);z-index:99999;pointer-events:none;background:rgba(0,0,0,.78);color:#fff;font:11px/15px ui-monospace,Menlo,monospace;padding:6px 10px;border-radius:8px;white-space:pre;max-width:96vw"></div>
-<div id="mcsa" style="position:fixed;left:0;top:0;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)"></div>
-<script>(function(){var o=document.getElementById('mcdbg'),sa=document.getElementById('mcsa');
-function f(n){return Math.round(n*10)/10}
-function u(){var cs=getComputedStyle(sa),pr=document.querySelector('body > div:not(#mcdbg):not(#mcsa)'),st=document.getElementById('stage').getBoundingClientRect(),ifr=document.getElementById('v').getBoundingClientRect(),vv=window.visualViewport,inner='?';
-try{inner=document.getElementById('v').contentWindow.innerHeight}catch(e){}
-var t=['tall-mode: '+(window.__tall===true),'standalone: '+(navigator.standalone===true||matchMedia('(display-mode: standalone)').matches),
-'screen: '+screen.width+' x '+screen.height,
-'inner: '+innerWidth+' x '+innerHeight,
-'visualVP: '+(vv?f(vv.width)+' x '+f(vv.height)+' top '+f(vv.offsetTop):'n/a'),
-'docEl: '+document.documentElement.clientWidth+' x '+document.documentElement.clientHeight,
-'safe T/B: '+cs.paddingTop+' / '+cs.paddingBottom,
-'stage: top '+f(st.top)+' bottom '+f(st.bottom),
-'iframe: top '+f(ifr.top)+' bottom '+f(ifr.bottom)+' inner-h '+inner];
-o.textContent=t.join('\n')}
-u();setInterval(u,700);addEventListener('resize',u);})();</script>
 </body>
 </html>
