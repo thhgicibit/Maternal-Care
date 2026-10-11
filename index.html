@@ -17,6 +17,7 @@
 @media (prefers-color-scheme:dark){:root{--page:#1b1416}}
 *,*::before,*::after{box-sizing:inherit}
 html,body{height:100%;margin:0;overflow:hidden}
+body{position:fixed;left:0;top:0;right:0;bottom:0;width:100%}
 body{background:#FFFAF3;-webkit-tap-highlight-color:transparent}
 body.splash{background:linear-gradient(180deg,#ff8998,#ff5e76)}
 body.framed{background:var(--page)}
@@ -54,11 +55,12 @@ var TAB={home:'home',journal:'journal',care:'care',ai:'ai',connect:'connect',pos
 var fr=document.getElementById('v'),stage=document.getElementById('stage'),stack=[],STATE={},nextArg=null;
 try{STATE=JSON.parse(localStorage.getItem('mc-state')||'{}')||{}}catch(e){}
 function persist(){try{localStorage.setItem('mc-state',JSON.stringify(STATE))}catch(e){}}
-function fit(){var w=innerWidth||document.documentElement.clientWidth,h=innerHeight||document.documentElement.clientHeight;if(!w||!h)return;
+var probe=document.createElement('div');probe.style.cssText='position:fixed;left:0;top:0;right:0;bottom:0;visibility:hidden;pointer-events:none';document.body.appendChild(probe);
+function fit(){var pr=probe.getBoundingClientRect(),w=Math.round(pr.width)||innerWidth||document.documentElement.clientWidth,h=Math.round(pr.height)||innerHeight||document.documentElement.clientHeight;if(!w||!h)return;
 var fm=w/h>0.7,m=fm?48:0;document.body.classList.toggle('framed',fm);
 var k=fm?Math.min((w-m)/402,(h-m)/874):w/402,H=fm?874:h/k;stage.style.height=H+'px';fr.style.height=H+'px';
 if(k>0)stage.style.transform='translate(-50%,-50%) scale('+k+')'}
-fit();addEventListener('resize',fit);
+fit();addEventListener('resize',fit);addEventListener('orientationchange',function(){setTimeout(fit,120)});addEventListener('pageshow',fit);if(window.visualViewport)visualViewport.addEventListener('resize',fit);
 function fail(m){stage.insertAdjacentHTML('beforeend','<pre style="position:absolute;inset:0;margin:0;padding:16px;white-space:pre-wrap;font:12px monospace;color:#B32442;background:#FFFAF3;z-index:9">'+m+'</pre>')}
 function show(n){
   document.body.classList.toggle('splash',n==='splash');
